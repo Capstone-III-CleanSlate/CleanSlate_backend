@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const {
     filterMessages,
     prepareMessagesForAI,
-} = require("../services/filterMessages");
+} = require("../filterMessages");
 
 
 // Using a fixed date keeps age-related tests predictable.
