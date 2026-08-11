@@ -31,19 +31,20 @@ CleanSlate is a Chrome extension built with React and an Express backend.
 
 The application works in two stages.
 
-### Stage 1 – Rule-Based Filtering
+### Stage 1 – Gmail Query and Protected-Sender Filtering
 
-Our own filtering logic scans the inbox and finds possible cleanup candidates.
+The backend asks Gmail to find possible cleanup candidates using Gmail's
+built-in query filtering.
 
-By default, it looks for emails that are:
+By default, Gmail returns emails that are:
 
 - Unread
 - Older than 15 days
 - Not starred
 - Not marked as important
-- Not from a protected sender
 
-Only these emails continue to the next step.
+Our application then removes emails from protected senders. Only the
+remaining emails continue to the next step.
 
 ### Stage 2 – AI Analysis
 
@@ -73,7 +74,7 @@ Our team plans to complete the following features:
 
 - Chrome extension interface
 - Gmail login using Google OAuth
-- Rule-based email filtering
+- Gmail query and protected-sender filtering
 - AI email classification
 - Confidence score and explanation
 - Protected sender list
@@ -187,7 +188,7 @@ The database will store user preferences, protected senders, cleanup history, an
 
 ### Week 2
 
-- Implement rule-based filtering
+- Implement Gmail query and protected-sender filtering
 - Connect AI
 - Display AI recommendations
 - Build review interface
@@ -209,7 +210,7 @@ People spend too much time cleaning cluttered inboxes because it's difficult to 
 
 ### Our Solution
 
-CleanSlate combines rule-based filtering with AI to recommend which emails users should keep, archive, or review, while always leaving the final decision to the user.
+CleanSlate combines Gmail query filtering, application-specific protected-sender rules, and AI to recommend which emails users should keep, archive, or review, while always leaving the final decision to the user.
 
 ### Technical Highlight
 
