@@ -1,7 +1,7 @@
-//  * Separates fetched Gmail messages into:
-//  * - candidates that can continue through the workflow
-//  * - excluded messages sent by protected senders
-//  * - counts that summarize the results
+//Separates fetched Gmail messages into:
+//candidates that can continue through the workflow
+//excluded messages sent by protected senders
+//counts that summarize the results
 
 
 function filterProtectedSenders(
