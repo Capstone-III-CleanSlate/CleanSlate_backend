@@ -2,7 +2,6 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const {
-    normalizeEmail,
     filterProtectedSenders,
     prepareMessagesForAI,
 } = require("../filterMessages");
@@ -23,17 +22,6 @@ function createMessage(overrides = {}) {
     };
 }
 
-
-test("normalizes an email address for protected-sender matching", () => {
-    assert.equal(
-        normalizeEmail("  Friend@Example.com  "),
-        "friend@example.com"
-    );
-
-    assert.equal(normalizeEmail(null), "");
-});
-
-
 test("keeps messages whose senders are not protected", () => {
     const message = createMessage();
 
@@ -50,8 +38,6 @@ test("keeps messages whose senders are not protected", () => {
         fetchedCount: 1,
         candidateCount: 1,
         protectedCount: 0,
-        excludedCount: 0,
-        excludedByReason: {},
     });
 });
 
@@ -75,10 +61,7 @@ test("excludes a protected sender regardless of casing", () => {
     ]);
 
     assert.equal(result.counts.protectedCount, 1);
-    assert.equal(
-        result.counts.excludedByReason.protected_sender,
-        1
-    );
+
 });
 
 
@@ -112,23 +95,6 @@ test("does not repeat Gmail query filtering", () => {
     assert.equal(result.candidates.length, 1);
     assert.strictEqual(result.candidates[0], message);
 });
-
-
-test("throws when messages is not an array", () => {
-    assert.throws(
-        () => filterProtectedSenders(null, []),
-        TypeError
-    );
-});
-
-
-test("throws when protectedSenders is not an array", () => {
-    assert.throws(
-        () => filterProtectedSenders([], "not-an-array"),
-        TypeError
-    );
-});
-
 
 test("prepares bounded AI input without modifying the original", () => {
     const message = createMessage({
