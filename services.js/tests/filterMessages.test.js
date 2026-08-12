@@ -39,7 +39,7 @@ test("keeps messages whose senders are not protected", () => {
 
     const result = filterProtectedSenders(
         [message],
-        ["friend@example.com"]
+        [{ senderEmail: "friend@example.com" }]
     );
 
     assert.equal(result.candidates.length, 1);
@@ -63,7 +63,7 @@ test("excludes a protected sender regardless of casing", () => {
                 senderEmail: "Friend@Example.com",
             }),
         ],
-        ["friend@example.com"]
+        [{ senderEmail: "friend@example.com" }]
     );
 
     assert.deepEqual(result.candidates, []);
@@ -114,17 +114,19 @@ test("does not repeat Gmail query filtering", () => {
 });
 
 
-test("returns an empty result for non-array message input", () => {
-    const result = filterProtectedSenders(
-        null,
-        "not-an-array"
+test("throws when messages is not an array", () => {
+    assert.throws(
+        () => filterProtectedSenders(null, []),
+        TypeError
     );
+});
 
-    assert.deepEqual(result.candidates, []);
-    assert.deepEqual(result.excluded, []);
-    assert.equal(result.counts.fetchedCount, 0);
-    assert.equal(result.counts.candidateCount, 0);
-    assert.equal(result.counts.protectedCount, 0);
+
+test("throws when protectedSenders is not an array", () => {
+    assert.throws(
+        () => filterProtectedSenders([], "not-an-array"),
+        TypeError
+    );
 });
 
 

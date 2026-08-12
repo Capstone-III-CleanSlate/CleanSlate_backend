@@ -10,44 +10,32 @@ function filterProtectedSenders(
     messages,
     protectedSenders = []
 ) {
+    if (!Array.isArray(messages)) {
+        throw new TypeError("messages must be an array");
+    }
+
+    if (!Array.isArray(protectedSenders)) {
+        throw new TypeError("protectedSenders must be an array");
+    }
+
     // If protectedSenders is malformed, use an empty array
     // instead of crashing while calling .map().
-    const safeProtectedSenders = Array.isArray(protectedSenders)
-        ? protectedSenders
-        : [];
+
+
+
 
     // Create a Set of normalized protected email addresses.
     // Protected senders may be strings or database objects.
     const protectedEmails = new Set(
-        safeProtectedSenders
-            .map((sender) => {
-                if (typeof sender === "string") {
-                    return sender;
-                }
-
-                if (
-                    sender &&
-                    typeof sender === "object"
-                ) {
-                    return sender.senderEmail;
-                }
-
-                return "";
-            })
-            .map(normalizeEmail)
-            .filter(Boolean)
+        protectedSenders.map((sender) => sender.senderEmail)
     );
 
     const candidates = [];
     const excluded = [];
 
-    // Gmail owns the query-based filtering. This function only
-    // applies CleanSlate's protected-sender rule.
-    const safeMessages = Array.isArray(messages)
-        ? messages
-        : [];
 
-    for (const message of safeMessages) {
+
+    for (const message of messages) {
         const normalizedSenderEmail = normalizeEmail(
             message?.senderEmail
         );
@@ -69,7 +57,7 @@ function filterProtectedSenders(
         candidates,
         excluded,
         counts: {
-            fetchedCount: safeMessages.length,
+            fetchedCount: messages.length,
             candidateCount: candidates.length,
             protectedCount: excluded.length,
             excludedCount: excluded.length,
