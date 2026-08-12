@@ -1,20 +1,25 @@
+//  * Separates fetched Gmail messages into:
+//  * - candidates that can continue through the workflow
+//  * - excluded messages sent by protected senders
+//  * - counts that summarize the results
+
 
 function filterProtectedSenders(
     messages,
     protectedSenders = []
 ) {
 
-    // Create a Set of normalized protected email addresses.
-    // Protected senders may be strings or database objects.
+    // Build a lookup set from the protected-sender records.
+    // Each record is expected to provide a senderEmail value.
     const protectedEmails = new Set(
         protectedSenders.map((sender) => sender.senderEmail)
     );
-
+    // Store messages in separate groups for later processing or reporting.
     const candidates = [];
     const excluded = [];
 
 
-
+    // Create a Set of normalized protected email addresses.
     for (const message of messages) {
         const normalizedSenderEmail = message.senderEmail
             .trim()
@@ -27,13 +32,14 @@ function filterProtectedSenders(
                     message?.gmailMessageId,
                 reason: "protected_sender",
             });
+            // Do not add protected messages to the candidate list.
             continue;
         }
 
-        // Preserve the original object and original email casing.
+        // Keep the original message object for later processing.
         candidates.push(message);
     }
-
+    // Return both message groups and summary counts for the caller.
     return {
         candidates,
         excluded,
@@ -46,7 +52,7 @@ function filterProtectedSenders(
 }
 
 
-// Limits text sent to the eventual AI provider.
+// Trims text and limits its length before it is sent to an AI provider.
 function trimText(value, maxCharacters) {
     if (typeof value !== "string") {
         return "";
@@ -66,6 +72,7 @@ function prepareMessagesForAI(
         maxSnippetCharacters = 1200,
     } = {}
 ) {
+    // Treat invalid input as an empty list so this function always returns an array
     const safeCandidates = Array.isArray(candidates)
         ? candidates
         : [];
