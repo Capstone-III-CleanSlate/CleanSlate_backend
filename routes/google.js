@@ -165,7 +165,9 @@ router.get("/google/callback", async (req, res, next) => {
         // close the tab automatically and let the extension notice, or
         // redirect to a page the extension is watching for, or just switch to
         // chrome.identity.launchWebAuthFlow which handles this for us.
-        res.json({ success: true });
+        // res.json({ success: true });
+
+        return res.redirect(process.env.FRONTEND_URL); //sends you back to React
 
     } catch (err) {
         next(err);

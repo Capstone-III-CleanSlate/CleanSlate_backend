@@ -1,5 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
+require("dotenv").config();
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const googleRouter = require("./routes/google");
 const authenticationRouter = require("./routes/auth");
@@ -7,6 +9,12 @@ const gmailRouter = require("./routes/gmail");
 
 const app = express();
 
+app.use(
+    cors({
+        origin: process.env.FRONTEND_URL,
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
